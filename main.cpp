@@ -1,11 +1,12 @@
 #include<bits/stdc++.h>
 #include <algorithm>	
+// #include <unordered_map>
 #include<stdio.h>
 
 using namespace std;
 
 #define FILE_NAME "input.txt"       // contains words of length SQUARE_SIZE
-#define SQUARE_SIZE 4
+#define SQUARE_SIZE 3
 #define NO_OF_APLHABETS 26
 #define LOWEST_ASCII_ALPHABET 'a'
 
@@ -56,6 +57,56 @@ void Trie_build_check(Trie* t){
 	cout<<Trie_search(t,"rat")<<endl;
 }
 
+
+bool checkIsSol(vector<string> &v){
+	for(int i=0;i<v.size();i++){
+		for(int j=i;j<v.size();j++){
+			if(v[i][j]!=v[j][i]){
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+void getSolutionsBruteForceHelper(vector<string> &v,vector<string> &possible_solution,unordered_map<int,int> &m){
+	
+	if(possible_solution.size()==SQUARE_SIZE){
+		bool isSol = checkIsSol(possible_solution);
+		// isSol=true;
+		if(isSol){
+			// print here
+			for(int i=0;i<possible_solution.size();i++){
+				cout<<possible_solution[i]<<endl;
+			}
+			cout<<endl;
+		}
+		return;
+	}
+
+	for(int k=0;k<v.size();k++){
+		if(m[k]!=1){
+			m[k]=1;
+			possible_solution.push_back(v[k]);
+			getSolutionsBruteForceHelper(v,possible_solution,m);
+			possible_solution.pop_back();
+			m[k]=0;
+		}
+	}
+}
+
+void getSolutionsBruteForce(vector<string> &v){
+	unordered_map<int,int> m;
+	vector<string> possible_solution;
+	for(int k=0;k<v.size();k++){
+		m[k]=1;
+		possible_solution.push_back(v[k]);
+		getSolutionsBruteForceHelper(v,possible_solution,m);
+		possible_solution.pop_back();
+		m[k]=0;
+	}
+}
+
 int main(){
 
 	freopen("input.txt","r",stdin);
@@ -72,12 +123,17 @@ int main(){
 
 	for(int i=0;i<no_of_words;i++){
 		cin>>str;
+		assert(str.length()==SQUARE_SIZE);
 		transform(str.begin(),str.end(),str.begin(),::tolower);
 		v.push_back(str);
 		Trie_add(root,str);
 	}
 
+	sort(v.begin(),v.end());
+
 	// Trie_build_check(root);
-	
+
+	getSolutionsBruteForce(v);
+
 	return 0;
 }
