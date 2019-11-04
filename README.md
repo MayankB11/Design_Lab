@@ -6,15 +6,15 @@ Under the supervision of [Professor Abhijit Das](http://cse.iitkgp.ac.in/~abhij/
 
 main.cpp   
   * Brute force implementation, Time complexity O(nCs*s!) where n is the total no of words in dictionary of length s
-  * Trie approach (non-parallel), Time complexity O(n*(s-1)^26)
+  * Trie approach (non-parallel), Time complexity O(n*26^(s-1))
          
 p_main.cpp 
-  * Trie approach (parallel), Time complexity O((n*(s-1)^26)/t), where t is the number of threads
+  * Trie approach (parallel), Time complexity O((n*26^(s-1))/t), where t is the number of threads
 
-Both the trie approaches also have pruning
+Both the trie approaches have pruning.
 
 To compile:<br /> 
-  * g++ main.cpp main.h -lpthread
+  * g++ p_main.cpp/main.cpp main.h -lpthread
   
 To run:  (input.txt contains no of words first and then words as input)<br />
   * ./a.out 
