@@ -1,20 +1,4 @@
-#include <bits/stdc++.h>
-#include <algorithm>	
-// #include <unordered_map>
-#include <stdio.h>
-
-using namespace std;
-
-#define FILE_NAME "input.txt"       // contains words of length SQUARE_SIZE
-#define SQUARE_SIZE 3
-#define NO_OF_APLHABETS 26
-#define LOWEST_ASCII_ALPHABET 'a'
-
-struct  Trie
-{
-	struct Trie* children[NO_OF_APLHABETS];
-	bool isEnd;
-};
+#include "main.h"
 
 void Trie_init(Trie* t){
 	for(int i=0;i<NO_OF_APLHABETS;i++){
@@ -95,6 +79,7 @@ void getSolutionsBruteForceHelper(vector<string> &v,vector<string> &possible_sol
 			m[k]=0;
 		}
 	}
+
 }
 
 void getSolutionsBruteForce(vector<string> &v){
@@ -109,8 +94,44 @@ void getSolutionsBruteForce(vector<string> &v){
 	}
 }
 
-void checkSolution(Trie *t, Trie* pointers, int word_no){
-	
+// word_no for the ith word
+// letter in the word_no
+
+void checkSolution(Trie *t, Trie** pointers, int word_no, int depth){   
+ 
+	cout<<"Word_no: "<<word_no<<"\tDepth: "<<depth<<endl;
+
+	if(depth==SQUARE_SIZE){
+		depth = word_no+1;
+		word_no++;
+	}
+
+	if(word_no==SQUARE_SIZE){
+		cout<<"Solution found"<<endl; // TO DO build solution
+	}
+
+	for(int i=0;i<NO_OF_APLHABETS;i++){
+		if(pointers[word_no]->children[i]==NULL){  // solution doesn't exist with the current word
+			continue;
+		}else{
+
+			if(pointers[depth]->children[i]==NULL){  // solution doesn't exist with the depth index word
+				continue;
+			}
+
+			Trie* cur_word_pointer = pointers[word_no];
+			Trie* depth_word_pointer = pointers[depth];
+
+			pointers[word_no] = pointers[word_no]->children[i];
+			pointers[depth] = pointers[depth]->children[i];
+
+			// recursive call for the next letter
+			checkSolution(t,pointers,word_no,depth+1);
+
+			pointers[word_no] = cur_word_pointer;
+			pointers[depth] = depth_word_pointer;
+		}
+	}
 }
 
 // Using k pointers in trie approach approach
@@ -122,19 +143,20 @@ void kPointersTrie(Trie* t, vector<string> &v){
 	}
 
 	int k = v[0].length();
-	Trie* pointers = new Trie[k];
+	Trie** pointers = new Trie*[k];
 	string str;
 
 	for(int i=0;i<v.size();i++){
 		str = v[i];
 		for(int i=0;i<str.length();i++){
-			pointers[i] = t->children[str[i]-LOWEST_ASCII_ALPHABET];
-			if(pointers[i]==NULL){   // No solution exists with the current string
+			if(t->children[str[i]-LOWEST_ASCII_ALPHABET]==NULL){   // No solution exists with the current string
 				break;
 			}
+			pointers[i] = t->children[str[i]-LOWEST_ASCII_ALPHABET];
 		}
 		// There might be a possible solution with the current string, need to check
-		checkSolution(t,pointers,2);
+		cout<<"Checking for solution for words beginning with : "<<str<<endl;
+		checkSolution(t,pointers,1,1);
 	}
 }
 
@@ -152,6 +174,7 @@ int main(){
 	int no_of_words;
 	cin>>no_of_words;
 
+
 	for(int i=0;i<no_of_words;i++){
 		cin>>str;
 		assert(str.length()==SQUARE_SIZE);
@@ -165,6 +188,8 @@ int main(){
 	// Trie_build_check(root);
 
 	getSolutionsBruteForce(v);
+
+	kPointersTrie(root,v);
 
 	return 0;
 }
