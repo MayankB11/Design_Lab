@@ -9,6 +9,7 @@ using namespace std;
 #define SQUARE_SIZE 3
 #define NO_OF_APLHABETS 26
 #define LOWEST_ASCII_ALPHABET 'a'
+#define NO_OF_THREADS 4
 
 struct  Trie
 {
