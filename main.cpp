@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include <algorithm>	
 // #include <unordered_map>
-#include<stdio.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -109,9 +109,13 @@ void getSolutionsBruteForce(vector<string> &v){
 	}
 }
 
+void checkSolution(Trie *t, Trie* pointers, int word_no){
+	
+}
+
 // Using k pointers in trie approach approach
 
-void kPointersTrie(vector<string> &v){
+void kPointersTrie(Trie* t, vector<string> &v){
 
 	if(v.size()==0){
 		cout<<"No strings given"<<endl;
@@ -124,8 +128,13 @@ void kPointersTrie(vector<string> &v){
 	for(int i=0;i<v.size();i++){
 		str = v[i];
 		for(int i=0;i<str.length();i++){
-			
+			pointers[i] = t->children[str[i]-LOWEST_ASCII_ALPHABET];
+			if(pointers[i]==NULL){   // No solution exists with the current string
+				break;
+			}
 		}
+		// There might be a possible solution with the current string, need to check
+		checkSolution(t,pointers,2);
 	}
 }
 
