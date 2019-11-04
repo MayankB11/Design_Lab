@@ -14,7 +14,7 @@ p_main.cpp
 Both the trie approaches also have pruning
 
 To compile:<br /> 
-  * g++ main.cpp main.h -lpthread
+  * g++ p_main.cpp/main.cpp main.h -lpthread
   
 To run:  (input.txt contains no of words first and then words as input)<br />
   * ./a.out 
