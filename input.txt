@@ -1,6 +1,7 @@
-9
+10
 BIT
 ICE
+ACE
 TWO
 TEN
 HEN

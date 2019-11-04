@@ -97,7 +97,7 @@ void getSolutionsBruteForce(vector<string> &v){
 // word_no for the ith word
 // letter in the word_no
 
-void checkSolution(Trie *t, Trie** pointers, int word_no, int depth){   
+void checkSolution(Trie *t, Trie** pointers, int word_no, int depth, vector<string> &sol){   
  
 	cout<<"Word_no: "<<word_no<<"\tDepth: "<<depth<<endl;
 
@@ -107,7 +107,13 @@ void checkSolution(Trie *t, Trie** pointers, int word_no, int depth){
 	}
 
 	if(word_no==SQUARE_SIZE){
-		cout<<"Solution found"<<endl; // TO DO build solution
+
+		cout<<"---------------------------- Solution found ----------------------------"<<endl; 
+		for(int i=0;i<sol.size();i++){
+			cout<<sol[i]<<endl;
+		}
+		cout<<"------------------------------------------------------------------------"<<endl;
+		return;
 	}
 
 	for(int i=0;i<NO_OF_APLHABETS;i++){
@@ -123,13 +129,20 @@ void checkSolution(Trie *t, Trie** pointers, int word_no, int depth){
 			Trie* depth_word_pointer = pointers[depth];
 
 			pointers[word_no] = pointers[word_no]->children[i];
-			pointers[depth] = pointers[depth]->children[i];
+			if(word_no!=depth){
+				pointers[depth] = pointers[depth]->children[i];
+			}
 
+			sol[word_no][depth] = 'a'+i;
+			sol[depth][word_no] = 'a'+i;
 			// recursive call for the next letter
-			checkSolution(t,pointers,word_no,depth+1);
+			checkSolution(t,pointers,word_no,depth+1,sol);
 
 			pointers[word_no] = cur_word_pointer;
-			pointers[depth] = depth_word_pointer;
+
+			if(word_no!=depth){
+				pointers[depth] = depth_word_pointer;
+			}
 		}
 	}
 }
@@ -138,6 +151,10 @@ void checkSolution(Trie *t, Trie** pointers, int word_no, int depth){
 
 void kPointersTrie(Trie* t, vector<string> &v){
 
+	// cout<<Trie_search(t,"ace")<<endl;
+
+	int flag;
+
 	if(v.size()==0){
 		cout<<"No strings given"<<endl;
 	}
@@ -145,18 +162,37 @@ void kPointersTrie(Trie* t, vector<string> &v){
 	int k = v[0].length();
 	Trie** pointers = new Trie*[k];
 	string str;
+	vector<string> sol(k);
+
+	for(int i=0;i<sol.size();i++){
+		sol[i] = v[0];
+	}
 
 	for(int i=0;i<v.size();i++){
 		str = v[i];
+		sol[0]=str;
+		// inefficient memory access, column wise TO DO
+		for(int j=0;j<str.length();j++){
+			sol[j][0] = str[j];
+		}
+
+		flag = 1;
+
 		for(int i=0;i<str.length();i++){
 			if(t->children[str[i]-LOWEST_ASCII_ALPHABET]==NULL){   // No solution exists with the current string
+				flag = 0;
 				break;
 			}
 			pointers[i] = t->children[str[i]-LOWEST_ASCII_ALPHABET];
 		}
-		// There might be a possible solution with the current string, need to check
-		cout<<"Checking for solution for words beginning with : "<<str<<endl;
-		checkSolution(t,pointers,1,1);
+
+		if(flag){
+			// There might be a possible solution with the current string, need to check
+			cout<<"Checking for solution for words beginning with : "<<str<<endl;
+			checkSolution(t,pointers,1,1,sol);
+		}else{
+			cout<<"No solution for words beginning with : "<<str<<endl;
+		}
 	}
 }
 
