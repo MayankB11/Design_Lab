@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <algorithm>	
 // #include <unordered_map>
 #include<stdio.h>
@@ -49,6 +49,8 @@ bool Trie_search(Trie* t,string str){
 }
 
 void Trie_build_check(Trie* t){
+	// checks for three letter words 
+	// Initial checker
 	cout<<Trie_search(t,"bit")<<endl;
 	cout<<Trie_search(t,"top")<<endl;
 	cout<<Trie_search(t,"pen")<<endl;
@@ -104,6 +106,26 @@ void getSolutionsBruteForce(vector<string> &v){
 		getSolutionsBruteForceHelper(v,possible_solution,m);
 		possible_solution.pop_back();
 		m[k]=0;
+	}
+}
+
+// Using k pointers in trie approach approach
+
+void kPointersTrie(vector<string> &v){
+
+	if(v.size()==0){
+		cout<<"No strings given"<<endl;
+	}
+
+	int k = v[0].length();
+	Trie* pointers = new Trie[k];
+	string str;
+
+	for(int i=0;i<v.size();i++){
+		str = v[i];
+		for(int i=0;i<str.length();i++){
+			
+		}
 	}
 }
 
