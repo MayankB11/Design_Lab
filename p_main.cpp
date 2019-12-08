@@ -40,15 +40,20 @@ void checkSolution(Trie *t, Trie** pointers, int word_no, int depth, vector<stri
 		word_no++;
 	}
 
-	if(word_no==SQUARE_SIZE){
 
-		cout<<"---------------------------- Solution found ----------------------------"<<endl; 
+	if(word_no==SQUARE_SIZE){
+		mtx.lock();
+
+		// cout<<"---------------------------- Solution found ----------------------------"<<endl; 
 		for(int i=0;i<sol.size();i++){
 			cout<<sol[i]<<endl;
 		}
-		cout<<"------------------------------------------------------------------------"<<endl;
+		cout<<endl;
+		// cout<<"------------------------------------------------------------------------"<<endl;
+		mtx.unlock();
 		return;
 	}
+
 
 	for(int i=0;i<NO_OF_APLHABETS;i++){
 		if(pointers[word_no]->children[i]==NULL){  // solution doesn't exist with the current word
@@ -99,14 +104,15 @@ void threadHelper(int thread_id){
 	while(1){
 
 		mtx.lock();
+
 		if(word_index==v.size()){
-			break;
+			return;
 		}
 		str = v[word_index];
 		word_index++;
   		
-  		cout << "thread #" << thread_id << " checking for solutions beginning with : "<<str<<endl;
-  		cout<< "thread #" << thread_id << " word_index "<<word_index-1<<endl;
+  		// cout << "thread #" << thread_id << " checking for solutions beginning with : "<<str<<endl;
+  		// cout<< "thread #" << thread_id << " word_index "<<word_index-1<<endl;
   		
   		mtx.unlock();
 
@@ -129,10 +135,10 @@ void threadHelper(int thread_id){
 
 		if(flag){
 			// There might be a possible solution with the current string, need to check
-			cout<<"Checking for solution for words beginning with : "<<str<<endl;
+			// cout<<"Checking for solution for words beginning with : "<<str<<endl;
 			checkSolution(t,pointers,1,1,sol);
 		}else{
-			cout<<"No solution for words beginning with : "<<str<<endl;
+			// cout<<"No solution for words beginning with : "<<str<<endl;
 		}
 	}
 }
@@ -146,7 +152,7 @@ void kPointersTrie(Trie* t){
 	int flag;
 
 	if(v.size()<SQUARE_SIZE){
-		cout<<"Not enough strings given"<<endl;
+		// cout<<"Not enough strings given"<<endl;
 	}
 	
 	thread threads[NO_OF_THREADS];
@@ -162,7 +168,7 @@ void kPointersTrie(Trie* t){
 
 int main(){
 
-	freopen("input.txt","r",stdin);
+	freopen(FILE_NAME,"r",stdin);
 
 	string str;
 
